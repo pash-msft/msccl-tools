@@ -7,9 +7,10 @@ from msccl.topologies import *
 from msccl.language.collectives import AllReduce
 
 def allreduce_allpairs(gpus, instances, protocol):
-    gpuIds = [1]                # GPU IDs that perform reduction
-    # gpuIds = [1, 2, 9, 10]      # GPU IDs that perform reduction
-    # gpuIds = [1, 2]              # GPU IDs that perform reduction
+    # gpuIds = [1]                # GPU IDs that perform reduction, max hops =3
+    gpuIds = [1, 2, 9, 10]      # GPU IDs that perform reduction, max hops =3
+    # gpuIds = [1, 2]              # GPU IDs that perform reduction, max hops =3
+    gpuIds = [0, 1, 2, 3, 8, 9, 10, 11]      # GPU IDs that perform reduction, max hops =4
     size = gpus       # number of GPUs in system, also, used as copy size in send 
     rsize = len(gpuIds) # Number of reducer ranks in the systems == number of chunks
     chunksperloop = size * rsize # Total number of chunks
