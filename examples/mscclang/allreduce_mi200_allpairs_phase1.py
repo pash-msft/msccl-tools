@@ -27,6 +27,7 @@ def allreduce_allpairs(gpus, instances, protocol):
                     c = chunk(r1, Buffer.input, index, size=size) # Reference to the Source chunk
                     c.copy(gpuIds[r2], 'scratch', sendtb=gpuIds[r2], recvtb=r1)
 
+        """
         # Each reducer rank performs a local reduction on the nth chunk
         # Utilize 8 threadblocks for this reduction for better parallelism
         for r in range(rsize): # Go through each reducer rank in the syste, and perform reduction on data (respective data + scratch memory)
@@ -34,7 +35,7 @@ def allreduce_allpairs(gpus, instances, protocol):
                     c = chunk(gpuIds[r], Buffer.input, r*size + (index % size))  # Destination fragments (0..15) on given rank 
                     c.reduce(chunk(gpuIds[r], 'scratch', index), sendtb=(index % size))
                                     # other fragment in scratch memory - where chunks from other ranks are recieved
-        
+
         # Each reducer rank sends the fully reduced nth chunk to all other gpus 
         # Broadcast reduced chunk to other GPUs in the system
         for r1 in range(rsize): # Go through all reducer ranks (== 1 <= #GPUs), source rank
@@ -43,9 +44,9 @@ def allreduce_allpairs(gpus, instances, protocol):
                     index = r1 * size  # ReducerRank X CopySize gives the index for source copy chunk
                     c = chunk(gpuIds[r1], Buffer.input, index, size) # Source chunk
                     c.copy(r2, Buffer.input, index, sendtb=r2, recvtb=gpuIds[r1]) # Destination chunk
-                
+        """                
         XML()
-        Check()
+        # Check()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('num_gpus', type=int, help ='number of gpus')
